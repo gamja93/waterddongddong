@@ -2,6 +2,19 @@
 const generateBtn = document.getElementById('generate-btn');
 const numberElements = document.querySelectorAll('.number');
 const historyList = document.getElementById('history-list');
+const themeToggle = document.getElementById('theme-toggle');
+const root = document.documentElement;
+
+const storedTheme = localStorage.getItem('theme');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const initialTheme = storedTheme || (prefersDark ? 'dark' : 'light');
+
+setTheme(initialTheme);
+
+themeToggle.addEventListener('click', () => {
+    const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+});
 
 generateBtn.addEventListener('click', () => {
     // 1~45 사이의 중복 없는 숫자 6개 생성
@@ -44,4 +57,12 @@ function addHistory(numbers) {
     const listItem = document.createElement('li');
     listItem.textContent = numbers.join(', ');
     historyList.prepend(listItem); // 최신 항목을 맨 위에 추가
+}
+
+function setTheme(theme) {
+    root.dataset.theme = theme;
+    localStorage.setItem('theme', theme);
+    const isDark = theme === 'dark';
+    themeToggle.textContent = isDark ? 'Light mode' : 'Dark mode';
+    themeToggle.setAttribute('aria-pressed', String(isDark));
 }
